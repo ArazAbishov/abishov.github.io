@@ -6,8 +6,8 @@ description: >
   stuff.
 
 # Blog configuration
-baseurl: ""
-url: "https://abishov.com" # the base hostname & protocol for your site
+baseurl: /
+url: https://abishov.com # the base hostname & protocol for your site
 twitter_username: arazabishov
 github_username:  arazabishov
 
