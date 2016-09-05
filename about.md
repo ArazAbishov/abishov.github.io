@@ -4,12 +4,13 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/)
+Hi there,
 
-You can find the source code for the Jekyll new theme at:
-{% include icon-github.html username="jekyll" %} /
-[minima](https://github.com/jekyll/minima)
+This is my personal blog, where I mostly write about programming and everything
+related to it. I love open source and do open source whenever I can. Currently,
+I work at University of Oslo where I am developing android apps for largest,
+open source health information system - DHIS2.
 
-You can find the source code for Jekyll at
-{% include icon-github.html username="jekyll" %} /
-[jekyll](https://github.com/jekyll/jekyll)
+You can reach me out on [email](mailto:araz.abishov.gsoc@gmail.com),
+[twitter](https://twitter.com/arazabishov) or
+[linkedin](https://www.linkedin.com/in/araz-abishov-b98675104).
