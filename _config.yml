@@ -13,3 +13,7 @@ github_username:  arazabishov
 # Build settings
 markdown: kramdown
 theme: minima
+
+# Disqus configuration
+disqus:
+  shortname: abishov
