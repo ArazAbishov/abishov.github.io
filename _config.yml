@@ -17,3 +17,6 @@ theme: minima
 # Disqus configuration
 disqus:
   shortname: abishov
+
+# Analytics
+google_analytics: UA-83806464-1
