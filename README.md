@@ -1,3 +1,3 @@
 # abishov.github.io
 
-Source code for blog powered by jekyll. 
+Source code for blog powered by Jekyll. 
