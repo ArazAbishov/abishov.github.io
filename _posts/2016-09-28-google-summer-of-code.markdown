@@ -1,7 +1,7 @@
 ---
 layout: post
 title: >
-  Google Summer of Code or a way from student to organization administrator
+  A road from Google Summer of Code student to organization administrator
 date:   2016-09-28 20:00:00 +0000
 ---
 
