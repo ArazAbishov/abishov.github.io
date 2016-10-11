@@ -12,7 +12,7 @@ The first time I read about GSoC was in 2013, from a blogpost of a student who h
 
 First thoughts were scary rather motivating: "I am not smart enough", "I don't have enough experience" and plenty of other reasons which might convince anyone even not to try. Plethora of smart people will put aside idea of participating just because of not being "good enough". Try not to think about failure, instead focus on what you can and *do* your best. Google's ["Am I good enough?" guide](http://write.flossmanuals.net/gsocstudentguide/am-i-good-enough/) for students states that you don't have to fulfill 100% of project requirements, 51% and strong will to learn is enough.
 
-<br/>![Google Summer of Code 2013](/assets/google-summer-of-code-2013.png)<br/>  
+<br/>![Google Summer of Code 2013](/content/images/google-summer-of-code-2013.png)<br/>  
 **Google Summer of Code 2013**  
 After two months of preparations, dozens of emails sent back and forth to organization mentors, hundreds of hours spent on project prototype and description, it was time to submit proposal. However, the most challenging part turned out to be expectation of results from Google and open source organizations.
 
@@ -22,7 +22,7 @@ Organization which has selected me was Health Information System Programme. HISP
 
 Three months later, project was successfully completed. However, I must admit that building application in a such short period of time is a non-trivial task. On the other hand, working on the challenging project with a team of sophisticated developers is a great opportunity for any student to learn fast. I am very grateful to my mentors who guided me throughout the summer and helped me to finish my work in time.
 
-<br/>![Google Summer of Code 2014](/assets/google-summer-of-code-2014.png)<br/>  
+<br/>![Google Summer of Code 2014](/content/images/google-summer-of-code-2014.png)<br/>  
 **Google Summer of Code 2014**  
 Key intention of GSoC is not to organize short-term internships, but to raise new generation of open source contributors. This makes a lot of sense, since building software from scratch is a lot easier rather than continuously maintaining it. If students won't stick around after summer, project has to be supported either by community or must be abandoned. This is especially true for projects which timeline simply don't fit into three months.
 
@@ -36,14 +36,14 @@ As final year of bachelors was approaching, hassle around thesis was getting mor
 Everything was happening lightning fast. During next two
 weeks I got my visa, and in a one and half months I was ready to leave my home. Moving to another country is a challenging and stressful process, especially if you have not been traveling much before. Absolutely different culture, people, language: all these factors might be scary in the beginning. However, breaking out from comfort zone is very important for personal growth. It took me approximately two months to settle down and adjust to new environment. Many thanks to HISP team, which was very friendly and helpful during my first days in Norway.
 
-<br/>![University of Oslo](/assets/university-of-oslo-academy-2015.jpg)<br/>  
+<br/>![University of Oslo](/content/images/university-of-oslo-academy-2015.jpg)<br/>  
 Conference was the awesome opportunity to meet people and catch up on the things happening in organization. I have met almost everyone I knew from hundreds of emails and GitHub commits just in a few hours. Of course, remote work is the future (maybe even the present), but it has major downside - lack of live communication. We still need to see and talk to people we work with, that's just a part of our nature.
 
 Attending sessions was also a nice way to learn from community. Gaining understanding of how people use software is a valuable knowledge, which empowers developers to improve and focus on what really matters. Presentation of android apps was a part of agenda. It was very exciting for me and team of android developers to show how mobile platform can complement functionality of DHIS 2. Since it was first time for me talking on stage, presentation was not perfect, but it was great learning experience.
 
 Conference was getting closer to the end and it was time to write some code for DHIS 2!
 
-<br/>![Google Summer of Code 2014](/assets/google-summer-of-code-2016.png)<br/>  
+<br/>![Google Summer of Code 2014](/content/images/google-summer-of-code-2016.png)<br/>  
 **Google Summer of Code 2016**  
 During autumn 2015, Google has announced new GSoC iteration. As a part of the team, I was eager to contribute to organization as mentor and administrator. A few months later, when application process for open source organization has begun, we started working on project ideas. Many thanks to everyone on the team who helped with preparations, especially to our former GSoC HISP administrator.
 
