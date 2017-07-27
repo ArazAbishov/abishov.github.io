@@ -2,7 +2,7 @@
 layout: post
 title: >
   Implementing a bot for Slack in Rust, Rocket and Anterofit - Part 1
-date: 2017-07-17 22:00:00 +0000
+date: 2017-07-27 15:00:00 +0000
 ---
 
 Rust is a systems programming language which enables developers to write safe and fast code without sacrificing high-level language constructs. At first, it seems that Rust is targeting only performance critical use cases, but original intention is far more ambitious. Frameworks like Rocket, Serde and Anterofit make Rust a good fit for the web application development as well.
