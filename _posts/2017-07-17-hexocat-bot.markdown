@@ -1,25 +1,20 @@
 ---
 layout: post
 title: >
-  Implementing slash command for Slack in Rust, Rocket and Anterofit - Part 1
+  Implementing a bot for Slack in Rust, Rocket and Anterofit - Part 1
 date: 2017-07-17 22:00:00 +0000
 ---
 
-Rust is a systems programming language which enables developers to write safe and fast code without sacrificing high-level language constructs. At first it seems that Rust is targeting only performance critical use cases, but original intention is far more ambitious. Frameworks like Rocket, Serde and Anterofit make Rust a good fit for the web application development as well.
+Rust is a systems programming language which enables developers to write safe and fast code without sacrificing high-level language constructs. At first, it seems that Rust is targeting only performance critical use cases, but original intention is far more ambitious. Frameworks like Rocket, Serde and Anterofit make Rust a good fit for the web application development as well.
 
-This blogpost is all about building a simple slack bot, which allows to search github repositories. Obviously, you don't need to develop a simple chatbot in systems programming language, but intention of this blogpost is to show how powerful Rust is. The whole implementation is less 150 lines code, which is quite amazing.
+This series of blogposts will be dedicated to building simple slack bot for searching github repositories. Developing a bot in systems programming language might seem to be a crazy idea, but intention is to showcase how powerful Rust is. The whole implementation is about 150 lines of code, which is quite amazing.
 
-In order to make this blog post self-sufficient, we will build a simple command line utility for searching repositories. In the second part, command line app will be turned into a small server built on top of the `Rocket` framework.
-
-- bla bla about Rust
-- scope of the blogpost
-- slowly shift to the actual topic
+First part is dedicated to the implementation of command line utility using `Anterofit` and `Serde` libraries. Following post focuses on integration of the `Rocket` framework, which will turn the command line utility into functioning web app. The last blog post will be about managing and running the bot behind NGINX reverse proxy on RaspberryPi.
 
 ## Preparing development environment
-- mention usage of vagrant
--
+One of the dependencies - Rocket, requires the nightly version of Rust compiler. We will need to make sure that it is installed and configured correctly.
 
-One of the dependencies - Rocket, depends on the nightly version of Rust compiler. We will need to make sure that it is installed and configured correctly.
+> In order to keep development environment reproducible and isolated, I highly recommend using [Vagrant](https://www.vagrantup.com/). Especially in case if you are working simultaneously on multiple projects, which require different versions of compiler.  
 
 In case if you don't have `rustup` installed on your machine, execute following command:
 
@@ -30,7 +25,7 @@ curl https://sh.rustup.rs -sSf | sh
 source $HOME/.cargo/env
 ```
 
-No we are going to switch to nightly compiler and set it as default:
+No we are going to switch to nightly compiler and set it as a default version:
 
 ```bash
 # checking for updates
@@ -45,7 +40,7 @@ rustup default nightly
 
 Remember that you always can switch back to the stable compiler by executing `rustup default stable`.
 
-Hyper – a HTTP library which is used both by Rocket and Anterofit, has a dependency on OpenSSL native libraries which we need to install in the system:
+Hyper – a HTTP library which is used both by the Rocket and Anterofit, has a dependency on OpenSSL native libraries which we need to install system-wide:
 
 ```bash
 # check for updates
