@@ -51,6 +51,8 @@ sudo apt-get install libssl-dev
 sudo apt-get install pkg-config
 ```
 
+> In case if you are running OSX, refer to this [discussion](https://github.com/hyperium/hyper/issues/935)
+
 ## Setting up a project
 Now we can finally start working on the project. First, we need to create a template application using [cargo](http://doc.crates.io/guide.html).
 
@@ -132,7 +134,9 @@ service! {
 
 A trait declaration is placed within Anterofit's `service` macro. Later on during compilation phase, Rust's compiler will generate the actual implementation of the specified trait. Since we work with a single endpoint, there is only one `search` function declared. It returns a `SearchResult` instance and takes in two parameters: a search keyword and a page size.
 
-The function body invokes two macros, where the first one is used to specify the HTTP verb, while the second one is used for processing the query parameters. The `GET` macro specifies both the HTTP verb and takes in a string which represents a relative path to the endpoint. The `query` macro maps the query parameter names to the arguments of the `search` function.
+The body of search function consists of the two parts:
+- The `GET` function invocation specifies both the HTTP verb and takes in a string which represents a relative path to the endpoint.
+- The `query` macro maps the query parameter names to the arguments of the `search` function.
 
 Now let's take a look at how to initialize and consume the service we have just defined.
 
@@ -143,6 +147,7 @@ fn prepare_response_body(repos: Vec<Repository>) -> String {
             repo.name, repo.owner.login, repo.html_url))
         .collect::<Vec<String>>()
         .join("\n");
+}
 
 fn main() {
     let service = Adapter::builder()
