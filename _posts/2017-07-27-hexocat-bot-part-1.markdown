@@ -165,7 +165,7 @@ fn main() {
 }
 ```
 
-The GitHub services is initialized through Anterofit's Adapter, which requires us to specify the parameters listed below:
+The GitHub service is initialized through Anterofit's Adapter, which requires us to specify the parameters listed below:
 
  - `base_url` - base url which will be appended to the relative path of the GitHubService
  - `interceptor` - a powerful abstraction which allows clients to modify requests / responses flowing through Anterofit. Here it is used to add a `UserAgent` header, which is required by GitHub API. If you want to take a closer look at `UserAgent` header implementation, here is a complete [example](https://github.com/ArazAbishov/hexocat-bot/tree/post-part-1).
