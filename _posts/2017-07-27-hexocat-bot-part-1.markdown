@@ -244,3 +244,9 @@ cd target/debug
 
 ## Wrapping up
 In this blog post we have learned how to consume REST APIs using Anterofit. You can find the source code of hexocat-bot on [GitHub](https://github.com/ArazAbishov/hexocat-bot/tree/post-part-1). In the next part, we are going to use Rocket to serve requests from Slack.
+
+----
+*Update on August 1st, 2017*
+
+* Thanks to [Mark Polak](https://twitter.com/Markionium) for proofreading this article.
+* Thanks to the reddit user [DroidLogician](https://www.reddit.com/user/DroidLogician) for providing explanation on the Anterofit's `GET` function.
