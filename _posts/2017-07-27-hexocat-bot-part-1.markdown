@@ -51,7 +51,7 @@ sudo apt-get install libssl-dev
 sudo apt-get install pkg-config
 ```
 
-> In case if you are running OSX, refer to this [discussion](https://github.com/hyperium/hyper/issues/935)
+> In case if you are running OSX, refer to this [discussion](https://github.com/hyperium/hyper/issues/935) to install necessary dependencies.
 
 ## Setting up a project
 Now we can finally start working on the project. First, we need to create a template application using [cargo](http://doc.crates.io/guide.html).
@@ -97,6 +97,12 @@ We have specified two query parameters:
 In order to be able to parse and map the response body to `struct`s, we first need to declare them within the `main.rs` file. Each response from GitHub is wrapped into a model which provides useful metadata to clients, like a total count of search hits, completeness of results and actual search items. Each result item is a repository, which also contains information about the hosting organization. In order to keep this example lean, we are going to declare only the properties which we need.
 
 ```rust
+extern crate serde;
+extern crate serde_json;
+
+#[macro_use]
+extern crate serde_derive;
+
 #[derive(Deserialize)]
 struct Owner {
     login: String,
@@ -122,6 +128,9 @@ As you might have noticed, there is an `attribute` specified for each of the mod
 Now we can jump in and declare some services. This is an example of how GitHub's search endpoint can be represented as an Anterofit service:
 
 ```rust
+#[macro_use]
+extern crate anterofit;
+
 service! {
     trait GitHubService {
         fn search(&self, q: String, p: u32) -> SearchResult {
@@ -141,6 +150,12 @@ The body of search function consists of the two parts:
 Now let's take a look at how to initialize and consume the service we have just defined.
 
 ```rust
+use anterofit::{Adapter, Url};
+use anterofit::net::intercept::AddHeader;
+use useragent::UserAgentHeader;
+
+mod useragent;
+
 fn prepare_response_body(repos: Vec<Repository>) -> String {
     return repos.iter()
         .map(|repo| format!("{0} by {1}: {2}",
@@ -179,6 +194,8 @@ Now we can finally compile and execute the app by running `cargo run` and see th
 The app with the hardcoded search keyword is not very useful. In order to let user to specify it dynamically, we are going to use command line arguments.
 
 ```rust
+use std::env;
+
 fn main() {
     // When running app through cargo, the first argument
     // is a path to the binary being executed. Hence, if repository
@@ -191,7 +208,19 @@ fn main() {
     // Extract the last argument as a search keyword.
     let repository = env::args().last().unwrap();
 
-    // Service initialization logic.
+    // Building an instance of GitHubService.
+    let service = Adapter::builder()
+        .base_url(Url::parse("https://api.github.com").unwrap())
+        .interceptor(AddHeader(UserAgentHeader("hexocat-bot".to_string())))
+        .serialize_json()
+        .build();
+
+    let response = match service.search(repository.to_string(), 10).exec().block() {
+        Ok(result) => prepare_response_body(result.items),
+        Err(error) => "Oops, something went wrong.".to_string()
+    };
+
+    println!("{}", response);
 }
 ```
 
