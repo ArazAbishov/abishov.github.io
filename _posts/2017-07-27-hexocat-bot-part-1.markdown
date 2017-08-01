@@ -5,16 +5,16 @@ title: >
 date: 2017-07-27 15:00:00 +0000
 ---
 
-Rust is a systems programming language which enables developers to write safe and fast code without sacrificing high-level language constructs. At first, it seems that Rust is targeting only performance critical use cases, but original intention is far more ambitious. Frameworks like Rocket, Serde and Anterofit make Rust a good fit for the web application development as well.
+Rust is a systems programming language which enables developers to write safe and fast code without sacrificing high-level language constructs. At first, it seems that Rust is targeting only performance critical use cases, but the original intention is far more ambitious. Frameworks like Rocket, Serde and Anterofit make Rust a good fit for the web application development as well.
 
-This series of blog posts will be dedicated to building simple slack bot for searching github repositories. Developing a bot in systems programming language might seem to be a crazy idea, but intention is to showcase how powerful Rust is. The whole implementation is about 150 lines of code, which is quite amazing.
+This series of blog posts will be dedicated to building simple slack bot for searching github repositories. Developing a bot in systems programming language might seem to be a crazy idea, but the intention is to showcase how powerful Rust is. The whole implementation is about 150 lines of code, which is quite amazing.
 
-First part is dedicated to the implementation of command line utility using Anterofit and Serde libraries. Following post focuses on integration of the Rocket framework, which will turn the command line utility into functioning web app. The last blog post will be about managing and running the bot behind NGINX reverse proxy on RaspberryPi.
+The first part is dedicated to the implementation of a command line utility using the libraries Anterofit and Serde. Following that, the next post focuses on integration of the Rocket framework, which will turn the command line utility into functioning web app. The last blog post will be about managing and running the bot behind a NGINX reverse proxy on a RaspberryPi.
 
 ## Preparing development environment
 One of the dependencies - Rocket, requires the nightly version of Rust compiler. We will need to make sure that it is installed and configured correctly.
 
-> In order to keep development environment reproducible and isolated, I highly recommend using [Vagrant](https://www.vagrantup.com/). Especially in case if you are working simultaneously on multiple projects, which require different versions of compiler.  
+> In order to keep the development environment reproducible and isolated, I highly recommend using [Vagrant](https://www.vagrantup.com/). Especially when you are working simultaneously on multiple projects, that require different versions of the compiler.  
 
 In case if you don't have `rustup` installed on your machine, execute following command:
 
@@ -25,7 +25,7 @@ curl https://sh.rustup.rs -sSf | sh
 source $HOME/.cargo/env
 ```
 
-No we are going to switch to nightly compiler and set it as a default version:
+Now we are going to switch to the nightly compiler and set it as the default version:
 
 ```bash
 # checking for updates
@@ -38,9 +38,9 @@ rustup install nightly
 rustup default nightly
 ```
 
-Remember that you always can switch back to the stable compiler by executing `rustup default stable`.
+Remember that you can always switch back to the stable compiler by executing `rustup default stable`.
 
-Hyper – a HTTP library which is used both by the Rocket and Anterofit, has a dependency on OpenSSL native libraries which we need to install system-wide:
+Hyper – a HTTP library which is used both by the Rocket and Anterofit, has a dependency on OpenSSL native libraries that we need to install system-wide:
 
 ```bash
 # check for updates
@@ -52,7 +52,7 @@ sudo apt-get install pkg-config
 ```
 
 ## Setting up a project
-Now we finally can start working on the project. First, we need to create a template application using `cargo`.
+Now we can finally start working on the project. First, we need to create a template application using [cargo](http://doc.crates.io/guide.html).
 
 ```bash
 # `--bin` flag tells cargo that we want to
@@ -60,9 +60,9 @@ Now we finally can start working on the project. First, we need to create a temp
 cargo new hexocat-bot --bin
 ```
 
-In order to be able to call Github APIs, we need to wire in a new dependency – Anterofit. Anterofit is a library which allows to gracefully consume REST APIs by declaring services as traits, which encapsulate all necessary information about the target endpoint. It has integration with the most popular serialization library for Rust called Serde, which makes parsing JSON a breeze.
+In order to call Github APIs, we need to wire in a new dependency – Anterofit. Anterofit is a library which allows to gracefully consume REST APIs by declaring services as traits, which encapsulate all necessary information about the target endpoint. It has integration with the most popular serialization library for Rust called Serde, which makes parsing JSON a breeze.
 
-In order to compile Anterofit as a part of the project, we need to modify `Cargo.toml` file.
+In order to compile Anterofit as a part of the project, we need to modify the  `Cargo.toml` file.
 
 ```toml
 [package]
@@ -79,7 +79,7 @@ serde_json = "0.9"
 serde_derive = "0.9"
 ```
 
-`Cargo.toml` file encloses information about the project, including metadata about the name, version and the authors. Dependencies are declared under the block of the same name. Since we are going to use Anterofit in conjunction with Serde, we also need to explicitly declare dependency on it.
+The `Cargo.toml` file encloses information about the project, including metadata about the name, version and the authors. Dependencies are declared under the block with the same name. Since we are going to use Anterofit in conjunction with Serde, we also need to explicitly declare a dependency on it.
 
 ## Working with GitHub endpoints
 Since we want to search only by repositories, we are going to work with one [endpoint](https://developer.github.com/v3/search/#search-repositories). Here is an example of the search query:
@@ -92,7 +92,7 @@ We have specified two query parameters:
  - `q` - repository we are looking for
  - `per_page` - limiting the size of the page
 
-In order to be able to parse and map response body to `struct`s, we first need to declare them. Each response from GitHub is wrapped into a model which provides useful metadata to clients, like a total count of search hits, completeness of results and actual search items. Each result item is a repository, which also contains information about hosting organization. In order to keep this example lean, we are going to declare only the properties which we need.
+In order to be able to parse and map the response body to `struct`s, we first need to declare them within the `main.rs` file. Each response from GitHub is wrapped into a model which provides useful metadata to clients, like a total count of search hits, completeness of results and actual search items. Each result item is a repository, which also contains information about the hosting organization. In order to keep this example lean, we are going to declare only the properties which we need.
 
 ```rust
 #[derive(Deserialize)]
@@ -115,9 +115,9 @@ struct SearchResult {
 }
 ```
 
-If you have noticed, there is an `attribute` specified for each of the models - `#[derive(Deserialize)]`. This way we tell Serde that we want to generate code for deserializing this model.
+As you might have noticed, there is an `attribute` specified for each of the models - `#[derive(Deserialize)]`. This way we tell Serde that we want to generate code for deserializing this model.
 
-Now we can jump in and declare some services. Here is an example of how GitHub's search endpoint can be represented as Anterofit service:
+Now we can jump in and declare some services. This is an example of how GitHub's search endpoint can be represented as an Anterofit service:
 
 ```rust
 service! {
@@ -130,11 +130,11 @@ service! {
 }
 ```
 
-A trait declaration is placed within Anterofit's `service` macro. Later on during compilation phase, Rust's compiler will generate actual implementation of the specified trait. Since we need to work with the only endpoint, there is only one `search` function declared. It returns `SearchResult` instance and takes in two parameters: a search keyword and a page size.
+A trait declaration is placed within Anterofit's `service` macro. Later on during compilation phase, Rust's compiler will generate the actual implementation of the specified trait. Since we work with a single endpoint, there is only one `search` function declared. It returns a `SearchResult` instance and takes in two parameters: a search keyword and a page size.
 
-The function body invokes two macros, where the first one is used to specify HTTP verb, while the second one is used for processing query parameters. `GET` macro both specifies HTTP verb and takes in a string which represents a relative path to the endpoint. `query` macro maps query parameter names to the arguments of the `search` function.
+The function body invokes two macros, where the first one is used to specify the HTTP verb, while the second one is used for processing the query parameters. The `GET` macro specifies both the HTTP verb and takes in a string which represents a relative path to the endpoint. The `query` macro maps the query parameter names to the arguments of the `search` function.
 
-Now let's take a look on how to initialize and consume the service we have just defined.
+Now let's take a look at how to initialize and consume the service we have just defined.
 
 ```rust
 fn prepare_response_body(repos: Vec<Repository>) -> String {
@@ -160,15 +160,15 @@ fn main() {
 }
 ```
 
-GitHub services is initialized through Anterofit's Adapter, which requires to specify parameters listed below:
+The GitHub services is initialized through Anterofit's Adapter, which requires us to specify the parameters listed below:
 
  - `base_url` - base url which will be appended to the relative path of the GitHubService
  - `interceptor` - a powerful abstraction which allows clients to modify requests / responses flowing through Anterofit. Here it is used to add a `UserAgent` header, which is required by GitHub API. If you want to take a closer look at `UserAgent` header implementation, here is a complete [example](https://github.com/ArazAbishov/hexocat-bot/tree/post-part-1).
  - `serialize_json` - flags Anterofit that we want to parse JSON within request or response body.
 
-Finally, invoking `build()` will return an instance of the GitHubService. Now searching GitHub is as easy as calling any function in Rust. In sake of simplicity, the search keyword and page size parameters are hardcoded. After successful call to the endpoint, service will return an instance of the `SearchResult` struct, which in a turn will be 'prettified' by the `prepare_response_body` function.
+Finally, invoking `build()` will return an instance of the GitHubService. Now searching GitHub is as easy as calling any function in Rust. In sake of simplicity, the search keyword and page size parameters are hardcoded. After a successful call to the endpoint, the service will return an instance of the `SearchResult` struct, which in a turn will be 'prettified' by the `prepare_response_body` function.
 
-Now we finally can compile and execute the app by running `cargo run` and see the output in the terminal.
+Now we can finally compile and execute the app by running `cargo run` and see the output in the terminal.
 
 ## Passing arguments dynamically
 The app with the hardcoded search keyword is not very useful. In order to let user to specify it dynamically, we are going to use command line arguments.
@@ -190,7 +190,7 @@ fn main() {
 }
 ```
 
-In order to make sure that repository name is provided, there is an argument count check right in the beginning of the main function. In case if user has specified at least one argument, it will be used as a search keyword:
+In order to make sure that the repository name is provided, there is an argument count check right in the beginning of the main function. In case the user has specified at least one argument, it will be used as a search keyword:
 
 ```bash
 # running app using cargo
@@ -198,7 +198,7 @@ In order to make sure that repository name is provided, there is an argument cou
 cargo run -- retrofit
 ```
 
-In case if you want to execute binary directly:
+In case you want to execute binary directly:
 
 ```bash
 # navigate to the folder with the executable
