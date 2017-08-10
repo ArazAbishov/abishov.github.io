@@ -210,7 +210,7 @@ struct Configuration {
     token: String
 }
 
-// Updated main function..
+// Updated main function.
 fn main() {
     rocket::ignite()
         .attach(AdHoc::on_attach(|rocket| {
