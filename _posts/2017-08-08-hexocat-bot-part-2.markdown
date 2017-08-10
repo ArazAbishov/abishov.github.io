@@ -5,7 +5,7 @@ title: >
 date: 2017-08-08 15:00:00 +0000
 ---
 
-In the [previous blog post]({% post_url 2017-07-27-hexocat-bot-part-1 %}) we have learned how to make calls to the GitHub APIs using Anterofit. In this part, we will focus on using the Rocket framework for serving requests, as well as using ngrok for exposing the hexocat-bot to the internet.
+In the [previous blog post]({% post_url 2017-07-27-hexocat-bot-part-1 %}) we have learned how to make calls to the GitHub APIs using Anterofit. In this part, we will focus on using the Rocket framework for serving requests, as well as using ngrok for exposing the hexocat bot to the internet.
 
 ## Integrating Rocket
 The first step is to add Rocket as a dependency. Open the `Cargo.toml` file and append following lines:
@@ -16,7 +16,7 @@ rocket = "0.3.0"
 rocket_codegen = "0.3.0"
 ```
 
-Next, we have to add the `Rocket.toml` configuration file that specifies custom address, port and logging level:
+Next, we have to add the `Rocket.toml` configuration file that specifies a custom address, port and logging level:
 
 ```toml
 [development]
@@ -35,7 +35,7 @@ log = "critical"
 port = 2727
 ```
 
-In order to be able to handle requests from Slack, we will need to declare new models. All the properties which are sent and received are described in the Slack API [documentation](https://api.slack.com/slash-commands). The `SlackRequest` and `SlackResponse` models contain only those properties which are used in the bot:
+In order to be able to handle requests from Slack, we will need to declare new models. All the properties which are sent and received are described in the Slack API [documentation](https://api.slack.com/slash-commands). The `SlackRequest` and `SlackResponse` models contain only those properties which are used by the bot:
 
 ```rust
 #![feature(plugin, custom_derive)]
@@ -52,7 +52,7 @@ struct SlackResponse {
 }
 
 // Struct that contains properties
-// which Slack sends to the hexocat-bot.
+// which Slack sends to the hexocat bot.
 #[derive(FromForm)]
 struct SlackRequest {
     text: String,
@@ -102,9 +102,9 @@ The `hexocat` function is a handler which will be called by Rocket when a reques
 
 The `prepare_response` function takes in the `text` parameter, which is a message that will be shown to the Slack user. The hardcoded `in_channel` response type signals Slack that message has to be shown to the all participants of the channel. The resulting `SlackResponse` instance is converted into the JSON string and set as a response body.
 
-A careful reader will notice that implementation of the main function has changed significantly. There is no logic for processing command line arguments anymore. Initialization of the Anterofit's adapter now takes place within the `hexocat` function. The only responsibility of the main function is to initialize and mount the `hexocat` handler.
+A careful reader will notice that implementation of the main function has changed significantly. There is no logic for processing command line arguments anymore. Initialization of the Anterofit's adapter will take place within the `hexocat` function. The only responsibility of the main function is to initialize and mount the `hexocat` handler.
 
-Now you can `cargo run` the server and execute a request against it. Note, that you have to supply text and token properties within the FormUrlEncoded body of the HTTP request. You can use postman or curl for testing the bot. Example of the curl request:
+Now you can `cargo run` the server and execute a request against it. Note, that you have to supply text and token properties within the FormUrlEncoded body of the HTTP request. You can use Postman or cURL for testing the bot. Example of the cURL request:
 
 ```bash
 curl -X POST \
@@ -113,7 +113,7 @@ curl -X POST \
   -d 'text=retrofit&token=test_token'
 ```
 
-## Integrating the GitHub service
+## Integration with the GitHub service
 Since now we can consume requests from Slack, it is time to search repositories on GitHub! First, there is a check if a user has specified the repository to search. In case if not, the corresponding error message is returned. Following lines are taken from the part one implementation, where the GitHub service is initialized and invoked. The difference is that the search result now is wrapped into `Response` instance and returned to the client instead of the standard output.
 
 ```rust
@@ -150,7 +150,7 @@ fn hexocat(request: LenientForm<SlackRequest>) -> Response<'static> {
 }
 ```
 
-Let's try to search something using curl:
+Let's try to search something using cURL:
 
 ```bash
 curl -X POST \
@@ -174,7 +174,7 @@ fn prepare_response_body(repos: Vec<Repository>) -> String {
 ```
 
 ## Guarding against requests from unknown sources
-Since hexocat-bot will be exposed to the internet, there must be a mechanism which prevents unknown clients from calling it. Each Slack application has a unique token assigned to it, which is also included in every request that Slack is issuing against the target app. So our job is to match the token from the incoming request with the one provided by the host machine. In case if they do not match, the bot will respond with the Forbidden (403) status.
+Since the hexocat bot will be exposed to the internet, there must be a mechanism which prevents unknown clients from calling it. Each Slack application has a unique token assigned to it, which is also included in every request that Slack is issuing against the target app. Our job is to match the token from the incoming request with the one provided by the host machine. In case if they do not match, the bot will respond with the Forbidden (403) status.
 
 Let's define a function which verifies the incoming token. There is no need to perform any checks if the hexocat bot is running in the development environment.
 
@@ -190,7 +190,7 @@ fn check_access(config: &Configuration, token: String) -> bool {
 }
 ```
 
-Next, we need a way to consume configuration parameters which are passed to the Rocket server from environment. In order to be able to access them later, we first need to store those parameters within the application state using [managed state](https://rocket.rs/guide/state/#managed-state):
+Next, we need a way to consume configuration parameters which are passed to the Rocket server from the environment. In order to be able to access them later, we first need to store those parameters within the application state using [Rocket's managed state](https://rocket.rs/guide/state/#managed-state):
 
 ```rust
 use rocket::fairing::AdHoc;
@@ -293,7 +293,7 @@ export ROCKET_PORT=2727
 target/release/hexocat-bot
 ```  
 
-> Unfortunately, we can't use the Rocket's [request guards](https://rocket.rs/guide/requests/#request-guards). Primarily because request guards are working only with HTTP headers, while Slack is sending token within HTTP body.
+> Unfortunately, we can't use Rocket's [request guards](https://rocket.rs/guide/requests/#request-guards). Primarily because request guards are working only with the HTTP headers, while Slack is sending token within HTTP body only.
 
 ## Using ngrok for development
 If we want to try out our bot through Slack, we first have to expose it to the internet. There is a great tool for this - [ngrok](https://ngrok.com/). All we have to do is to run the bot and point ngrok to the port it is running on:
@@ -311,4 +311,4 @@ cargo run
 The ngrok invocation will provide you a URL to which you will have to append `hexocat/` path in order to access the bot. The resulting URL will look something like this: [https://0658d623.ngrok.io/hexocat/](https://0658d623.ngrok.io/hexocat/). The last step is to create the slash command app on Slack with the given URL and try searching some GitHub repositories! You can find more information on creating a new slash command in the Slack [documentation](https://api.slack.com/slash-commands).
 
 ## Wrapping up
-In this blog post we have integrated Rocket for serving requests from Slack, as well as the GitHub service from [part one]({% post_url 2017-07-27-hexocat-bot-part-1 %}). You can find the source code of the hexocat bot on [GitHub](https://github.com/ArazAbishov/hexocat-bot/tree/post-part-2). In the next part we are going to deploy the Slack behind the NGINX proxy server on RaspberryPi. 
+In this blog post we have integrated Rocket for serving requests from Slack, as well as the GitHub service from [part one]({% post_url 2017-07-27-hexocat-bot-part-1 %}). You can find the source code of the hexocat bot on [GitHub](https://github.com/ArazAbishov/hexocat-bot/tree/post-part-2). In the next part we are going to deploy the Slack behind the NGINX proxy server on RaspberryPi.
