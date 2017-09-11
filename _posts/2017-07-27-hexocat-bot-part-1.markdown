@@ -7,9 +7,9 @@ date: 2017-07-27 15:00:00 +0000
 
 Rust is a systems programming language which enables developers to write safe and fast code without sacrificing high-level language constructs. At first, it seems that Rust is targeting only performance critical use cases, but the original intention is far more ambitious. Frameworks like Rocket, Serde and Anterofit make Rust a good fit for the web application development as well.
 
-This series of blog posts will be dedicated to building simple slack bot for searching github repositories. Developing a bot in systems programming language might seem to be a crazy idea, but the intention is to showcase how powerful Rust is. The whole implementation is about 150 lines of code, which is quite amazing.
+This series of blog posts will be dedicated to building simple slack bot for searching GitHub repositories. Developing a bot in systems programming language might seem to be a crazy idea, but the intention is to showcase how powerful Rust is. The whole implementation is about 150 lines of code, which is quite amazing.
 
-The first part is dedicated to the implementation of a command line utility using the libraries Anterofit and Serde. Following that, the next post focuses on integration of the Rocket framework, which will turn the command line utility into functioning web app. The last blog post will be about managing and running the bot behind a NGINX reverse proxy on a RaspberryPi.
+The first part is dedicated to the implementation of a command line utility using the libraries Anterofit and Serde. Following that, the next post focuses on integration of the Rocket framework, which will turn the command line utility into functioning web app.
 
 ## Preparing development environment
 One of the dependencies - Rocket, requires the nightly version of Rust compiler. We will need to make sure that it is installed and configured correctly.
