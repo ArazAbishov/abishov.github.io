@@ -5,7 +5,7 @@ title: >
 date: 2017-11-05 16:00:00 +0000
 ---
 
-If you had experience of writing UI tests for android, you probably heard of tools like Spoon or Composer. Along with orchestration of test execution, they provide APIs for capturing screenshots which later are placed into generated HTML report. All of these is great, but there are certain associated shortcomings:
+If you have experience writing UI tests for android, you probably heard of tools like Spoon or Composer. Along with orchestration of test execution, they provide APIs for capturing screenshots which later are placed into generated HTML report. All of these is great, but there are certain associated shortcomings:
  - Screenshot capturing logic clutters tests
  - Hard to replace one library by another
 
@@ -151,11 +151,14 @@ public class ScreenshotsRule<T extends Activity> extends ActivityTestRule<T> {
 
 > I had to create a synthetic `beforeActivityFinished()` callback by overriding `finishActivity()` method, which is not the "cleanest" solution. See the [feature request](https://issuetracker.google.com/issues/68897841) for adding it to `ActivityTestRule` in support library.
 
-In sake of simplicity and brevity of example, I have not overridden all of the parent constructors, but it is something what you most likely end-up doing in real world scenarios.
+For the sake of simplicity and brevity of example, I have not overridden all of the parent constructors, but it is something what you most likely end-up doing in real world scenarios.
 
-Within `apply` method we are storing a reference to a `Description` object that contains useful metadata about the test. In case if an instance of `@CaptureScreenshots` annotation is present, it means we have to take screenshots *after* activity has been launched and *before* it will be finished. If tags have not been supplied within annotation, name of the test method will be used as a basis for generating them.
+Within the `apply` method we are storing a reference to a `Description` object that contains useful metadata about the test. When a `@CaptureScreenshots` annotation is present, we have to take screenshots *after* activity has been launched and *before* it will be finished. When tags have not been supplied to the annotation, the name of the test method will be used as a basis for generating them.
 
 Now we can substitute this rule for `ActivityTestRule` and we are good to go.
 
-## Conclusion
+## Wrapping up
 We have less boilerplate to write in tests! Moreover, dependency on Spoon or any other plugin you might be using is abstracted away. It means switching to another solution in the future will be less painful.
+
+----
+Thanks to [Mark Polak](https://twitter.com/Markionium) for proofreading this article.
