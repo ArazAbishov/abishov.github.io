@@ -1,8 +1,8 @@
 ---
 layout: post
 title: >
-  A graceful way to capture screenshots in UI tests
-date: 2017-11-01 15:00:00 +0000
+  Cutting boilerplate in UI tests
+date: 2017-11-05 16:00:00 +0000
 ---
 
 If you had experience of writing UI tests for android, you probably heard of tools like Spoon or Composer. Along with orchestration of test execution, they provide APIs for capturing screenshots which later are placed into generated HTML report. All of these is great, but there are certain associated shortcomings:
