@@ -32,7 +32,7 @@ public class FormScreenTest {
 }
 ```
 
-Here I am using `Spoon` to capture screenshots which represent the state before and after user actions. This looks fine, but screenshot capturing logic shouldn't really be a part of the test body. Moreover, it simply becomes tedious to enter tags by hand, when it can be derived from the test name. This is what we can have instead:
+Here I am using `Spoon` to capture screenshots which represent the state before and after user actions. This looks fine, but screenshot capturing logic shouldn't really be a part of the test body. Moreover, it simply becomes tedious to enter tags by hand, when they can be automatically derived from the test name. This is what we can have instead:
 
 ```java
 @RunWith(AndroidJUnit4.class)
@@ -52,7 +52,7 @@ public class FormScreenTest {
 }
 ```
 
-Looks better huh? Notice that tags are derived from a test name automatically. Here is another example where tags are specified explicitly and the state of activity is captured within test using the `screenshot("tag")` method:
+Looks better huh? Here is another example where tags are specified explicitly and the state of activity is captured within test using the `screenshot("tag")` method:
 
 ```java
 @RunWith(AndroidJUnit4.class)
