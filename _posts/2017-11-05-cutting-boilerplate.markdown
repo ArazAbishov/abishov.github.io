@@ -162,3 +162,7 @@ We have less boilerplate to write in tests! Moreover, dependency on Spoon or any
 
 ----
 Thanks to [Mark Polak](https://twitter.com/Markionium) for proofreading this article.
+
+----
+## Update
+Here is the [link](https://gist.github.com/ArazAbishov/f42d2dcf121564e9f5e4818f06cd881b) to the GitHub gist with the ScreenshotsRule implementation.
