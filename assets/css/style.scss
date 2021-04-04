@@ -1,0 +1,7 @@
+---
+---
+
+$link-base-color: #48d597;
+
+@import "minima/skins/{{ site.minima.skin | default: 'dark' }}";
+@import "minima/initialize";

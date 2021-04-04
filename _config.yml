@@ -11,7 +11,14 @@ github_username:  arazabishov
 
 # Build settings
 markdown: kramdown
-theme: minima
+
+plugins:
+  - jekyll-remote-theme
+
+remote_theme: jekyll/minima@3cdd14dff1216f561c68329e0b7420c2dc9b796a
+
+minima:
+  skin: dark
 
 # Disqus configuration
 disqus:
