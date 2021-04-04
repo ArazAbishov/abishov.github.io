@@ -1,7 +1,15 @@
 ---
 ---
 
-$link-base-color: #48d597;
+$primary-text-color: #dddddd;
+$primary-color: #aaaaaa;
+$accent-color: #e1c16e;
+
+$link-base-color: $accent-color;
+$brand-color: $primary-color;
+
+$site-title-color: $primary-text-color;
+$text-color: $primary-text-color;
 
 @import "minima/skins/{{ site.minima.skin | default: 'dark' }}";
 @import "minima/initialize";
