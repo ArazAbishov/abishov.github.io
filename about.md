@@ -4,10 +4,8 @@ title: About
 permalink: /about/
 ---
 
-Hi there,
+Hi there!
 
-This is my personal blog, where I mostly write about programming in Android and Rust. I love open source and do open source whenever I can!
+I'm Araz Abishov, a software engineer living in Norway and working at Microsoft. I enjoy learning and playing around with the new technology, and I occasionally write about it in this blog.
 
-You can reach me out on [email](mailto:araz@abishov.com),
-[twitter](https://twitter.com/arazabishov) or
-[linkedin](https://www.linkedin.com/in/araz-abishov-b98675104).
+If you have any questions or just want to say hi, you can reach out to me at [twitter](https://twitter.com/arazabishov).
