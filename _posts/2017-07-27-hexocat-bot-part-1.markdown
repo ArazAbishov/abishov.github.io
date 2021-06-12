@@ -12,9 +12,10 @@ This series of blog posts will be dedicated to building simple slack bot for sea
 The first part is dedicated to the implementation of a command line utility using the libraries Anterofit and Serde. Following that, the next post focuses on integration of the Rocket framework, which will turn the command line utility into functioning web app.
 
 ## Preparing development environment
+
 One of the dependencies - Rocket, requires the nightly version of Rust compiler. We will need to make sure that it is installed and configured correctly.
 
-> In order to keep the development environment reproducible and isolated, I highly recommend using [Vagrant](https://www.vagrantup.com/). Especially when you are working simultaneously on multiple projects, that require different versions of the compiler.  
+> In order to keep the development environment reproducible and isolated, I highly recommend using [Vagrant](https://www.vagrantup.com/). Especially when you are working simultaneously on multiple projects, that require different versions of the compiler.
 
 In case if you don't have `rustup` installed on your machine, execute following command:
 
@@ -54,6 +55,7 @@ sudo apt-get install pkg-config
 > In case if you are running OSX, refer to this [discussion](https://github.com/hyperium/hyper/issues/935) to install necessary dependencies.
 
 ## Setting up a project
+
 Now we can finally start working on the project. First, we need to create a template application using [cargo](http://doc.crates.io/guide.html).
 
 ```bash
@@ -64,7 +66,7 @@ cargo new hexocat-bot --bin
 
 In order to call Github APIs, we need to wire in a new dependency – Anterofit. Anterofit is a library which allows to gracefully consume REST APIs by declaring services as traits, which encapsulate all necessary information about the target endpoint. It has integration with the most popular serialization library for Rust called Serde, which makes parsing JSON a breeze.
 
-In order to compile Anterofit as a part of the project, we need to modify the  `Cargo.toml` file.
+In order to compile Anterofit as a part of the project, we need to modify the `Cargo.toml` file.
 
 ```toml
 [package]
@@ -84,6 +86,7 @@ serde_derive = "0.9"
 The `Cargo.toml` file encloses information about the project, including metadata about the name, version and the authors. Dependencies are declared under the block with the same name. Since we are going to use Anterofit in conjunction with Serde, we also need to explicitly declare a dependency on it.
 
 ## Working with GitHub endpoints
+
 Since we want to search only by repositories, we are going to work with one [endpoint](https://developer.github.com/v3/search/#search-repositories). Here is an example of the search query:
 
 ```bash
@@ -91,8 +94,9 @@ curl https://api.github.com/search/repositories?q=retrofit&per_page=10
 ```
 
 We have specified two query parameters:
- - `q` - repository we are looking for
- - `per_page` - limiting the size of the page
+
+- `q` - repository we are looking for
+- `per_page` - limiting the size of the page
 
 In order to be able to parse and map the response body to `struct`s, we first need to declare them within the `main.rs` file. Each response from GitHub is wrapped into a model which provides useful metadata to clients, like a total count of search hits, completeness of results and actual search items. Each result item is a repository, which also contains information about the hosting organization. In order to keep this example lean, we are going to declare only the properties which we need.
 
@@ -144,6 +148,7 @@ service! {
 A trait declaration is placed within Anterofit's `service` macro. Later on during compilation phase, Rust's compiler will generate the actual implementation of the specified trait. Since we work with a single endpoint, there is only one `search` function declared. It returns a `SearchResult` instance and takes in two parameters: a search keyword and a page size.
 
 The body of search function consists of the two parts:
+
 - The `GET` function invocation specifies both the HTTP verb and takes in a string which represents a relative path to the endpoint.
 - The `query` macro maps the query parameter names to the arguments of the `search` function.
 
@@ -182,15 +187,16 @@ fn main() {
 
 The GitHub service is initialized through Anterofit's Adapter, which requires us to specify the parameters listed below:
 
- - `base_url` - base url which will be appended to the relative path of the GitHubService
- - `interceptor` - a powerful abstraction which allows clients to modify requests / responses flowing through Anterofit. Here it is used to add a `UserAgent` header, which is required by GitHub API. If you want to take a closer look at `UserAgent` header implementation, here is a complete [example](https://github.com/ArazAbishov/hexocat-bot/tree/post-part-1).
- - `serialize_json` - flags Anterofit that we want to parse JSON within request or response body.
+- `base_url` - base url which will be appended to the relative path of the GitHubService
+- `interceptor` - a powerful abstraction which allows clients to modify requests / responses flowing through Anterofit. Here it is used to add a `UserAgent` header, which is required by GitHub API. If you want to take a closer look at `UserAgent` header implementation, here is a complete [example](https://github.com/ArazAbishov/hexocat-bot/tree/post-part-1).
+- `serialize_json` - flags Anterofit that we want to parse JSON within request or response body.
 
 Finally, invoking `build()` will return an instance of the GitHubService. Now searching GitHub is as easy as calling any function in Rust. In sake of simplicity, the search keyword and page size parameters are hardcoded. After a successful call to the endpoint, the service will return an instance of the `SearchResult` struct, which in a turn will be 'prettified' by the `prepare_response_body` function.
 
 Now we can finally compile and execute the app by running `cargo run` and see the output in the terminal.
 
 ## Passing arguments dynamically
+
 The app with the hardcoded search keyword is not very useful. In order to let user to specify it dynamically, we are going to use command line arguments.
 
 ```rust
@@ -243,10 +249,12 @@ cd target/debug
 ```
 
 ## Wrapping up
+
 In this blog post we have learned how to consume REST APIs using Anterofit. You can find the source code of hexocat-bot on [GitHub](https://github.com/ArazAbishov/hexocat-bot/tree/post-part-1). In the next part, we are going to use Rocket to serve requests from Slack.
 
-----
-*Update on August 1st, 2017*
+---
 
-* Thanks to [Mark Polak](https://twitter.com/Markionium) for proofreading this article.
-* Thanks to the reddit user [DroidLogician](https://www.reddit.com/user/DroidLogician) for providing explanation on the Anterofit's `GET` function.
+_Updated on August 1st, 2017_
+
+- Thanks to [Mark Polak](https://twitter.com/Markionium) for proofreading this article.
+- Thanks to the reddit user [DroidLogician](https://www.reddit.com/user/DroidLogician) for providing explanation on the Anterofit's `GET` function.

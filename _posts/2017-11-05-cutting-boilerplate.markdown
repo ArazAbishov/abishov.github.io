@@ -6,8 +6,9 @@ date: 2017-11-05 16:00:00 +0000
 ---
 
 If you have experience writing UI tests for android, you probably heard of tools like Spoon or Composer. Along with orchestration of test execution, they provide APIs for capturing screenshots which later are placed into generated HTML report. All of these is great, but there are certain associated shortcomings:
- - Screenshot capturing logic clutters tests
- - Hard to replace one library by another
+
+- Screenshot capturing logic clutters tests
+- Hard to replace one library by another
 
 Here is the example of an instrumentation test for a simple form screen:
 
@@ -63,7 +64,7 @@ public class FormScreenTest {
           new ScreenshotsRule<>(FormActivity.class);
 
   @Test
-  @CaptureScreenshots(before = "before_state", after = "after_state")  
+  @CaptureScreenshots(before = "before_state", after = "after_state")
   public void clickOnSubmitMustHighlightErrors() {
     onView(withId(R.id.title)).perform(replaceText("test_title"));
     onView(withId(R.id.description)).perform(replaceText("test_description"));
@@ -77,6 +78,7 @@ public class FormScreenTest {
 ```
 
 ## Implementing ScreenshotsRule
+
 So how do we get there? By writing a jUnit rule which knows where to grab an instance of `Activity` and when to invoke `Spoon`. First of all, let's create an annotation for marking tests which we want to "screenshot":
 
 ```java
@@ -153,16 +155,20 @@ public class ScreenshotsRule<T extends Activity> extends ActivityTestRule<T> {
 
 For the sake of simplicity and brevity of example, I have not overridden all of the parent constructors, but it is something what you most likely end-up doing in real world scenarios.
 
-Within the `apply` method we are storing a reference to a `Description` object that contains useful metadata about the test. When a `@CaptureScreenshots` annotation is present, we have to take screenshots *after* activity has been launched and *before* it will be finished. When tags have not been supplied to the annotation, the name of the test method will be used as a basis for generating them.
+Within the `apply` method we are storing a reference to a `Description` object that contains useful metadata about the test. When a `@CaptureScreenshots` annotation is present, we have to take screenshots _after_ activity has been launched and _before_ it will be finished. When tags have not been supplied to the annotation, the name of the test method will be used as a basis for generating them.
 
 Now we can substitute this rule for `ActivityTestRule` and we are good to go.
 
 ## Wrapping up
+
 We have less boilerplate to write in tests! Moreover, dependency on Spoon or any other plugin you might be using is abstracted away. It means switching to another solution in the future will be less painful.
 
-----
+---
+
 Thanks to [Mark Polak](https://twitter.com/Markionium) for proofreading this article.
 
-----
+---
+
 ## Update
+
 Here is the [link](https://gist.github.com/ArazAbishov/f42d2dcf121564e9f5e4818f06cd881b) to the GitHub gist with the ScreenshotsRule implementation.

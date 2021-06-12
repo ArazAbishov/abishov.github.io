@@ -20,7 +20,7 @@ The first part of this blog post demonstrates the result, while the second one d
 
 ## An overview of the dev experience
 
-----
+---
 
 > The setup used in this demo includes an iPad Air (2020) paired with a magic keyboard and trackpad (see the picture above). This combination works pretty well, especially with the cursor support in iPadOS.
 
@@ -66,7 +66,7 @@ One of the highlights for me was that the VNC client sent the touch and scroll e
 
 ## Configuration steps
 
-----
+---
 
 The second part of the blog post describes the steps necessary to configure the Projector server and emulator.
 
@@ -280,13 +280,13 @@ At this point, you should have both Android Studio and emulators running. Congra
 
 ## Summary
 
-----
+---
 
 Overall, it was a lot of fun to try out mobile development on the iPad. Different input methods, such as cursor and keyboard for navigation in IDE, and the touch controls for emulators felt surprisingly good. Let's hope that Apple will bring developer tools to iPadOS one day.
 
 ## Resources
 
-----
+---
 
 - [JetBrains Projector on GitHub](https://github.com/JetBrains/projector-installer)
 - [JetBrains Projector with Android Studio by Joaquim](https://github.com/joaquim-verges/ProjectorAndroidStudio)

@@ -8,6 +8,7 @@ date: 2017-08-08 15:00:00 +0000
 In the [previous blog post]({% post_url 2017-07-27-hexocat-bot-part-1 %}) we have learned how to make calls to the GitHub APIs using Anterofit. In this part, we will focus on using the Rocket framework for serving requests, as well as using ngrok for exposing the hexocat bot to the internet.
 
 ## Integrating Rocket
+
 The first step is to add Rocket as a dependency. Open the `Cargo.toml` file and append following lines:
 
 ```toml
@@ -60,9 +61,10 @@ struct SlackRequest {
 }
 ```
 
-`#[derive(FromForm)]` attribute will signal Rocket to generate code for mapping `FormUrlEncoded` properties into the model instance.  
+`#[derive(FromForm)]` attribute will signal Rocket to generate code for mapping `FormUrlEncoded` properties into the model instance.
 
 ## Serving requests
+
 Now we can have some fun. Let's declare an endpoint that Slack is going to call:
 
 ```rust
@@ -114,6 +116,7 @@ curl -X POST \
 ```
 
 ## Integration with the GitHub service
+
 Since now we can consume requests from Slack, it is time to search repositories on GitHub! First, there is a check if a user has specified the repository to search. In case if not, the corresponding error message is returned. Following lines are taken from the part one implementation, where the GitHub service is initialized and invoked. The difference is that the search result now is wrapped into `Response` instance and returned to the client instead of the standard output.
 
 ```rust
@@ -174,6 +177,7 @@ fn prepare_response_body(repos: Vec<Repository>) -> String {
 ```
 
 ## Guarding against requests from unknown sources
+
 Since the hexocat bot will be exposed to the internet, there must be a mechanism which prevents unknown clients from calling it. Each Slack application has a unique token assigned to it, which is also included in every request that Slack is issuing against the target app. Our job is to match the token from the incoming request with the one provided by the host machine. In case if they do not match, the bot will respond with the Forbidden (403) status.
 
 Let's define a function which verifies the incoming token. There is no need to perform any checks if the hexocat bot is running in the development environment.
@@ -291,11 +295,12 @@ export ROCKET_PORT=2727
 
 # Execute the binary to start server.
 target/release/hexocat-bot
-```  
+```
 
 > Unfortunately, we can't use Rocket's [request guards](https://rocket.rs/guide/requests/#request-guards). Primarily because request guards are working only with the HTTP headers, while Slack is sending token within HTTP body only.
 
 ## Using ngrok for development
+
 If we want to try out our bot through Slack, we first have to expose it to the internet. There is a great tool for this - [ngrok](https://ngrok.com/). All we have to do is to run the bot and point ngrok to the port it is running on:
 
 > In case if you want to learn more about ngrok, check out this [tutorial](https://api.slack.com/tutorials/tunneling-with-ngrok) from Slack.
@@ -311,4 +316,5 @@ cargo run
 The ngrok invocation will provide you a URL to which you will have to append `hexocat/` path in order to access the bot. The resulting URL will look something like this: [https://0658d623.ngrok.io/hexocat/](https://0658d623.ngrok.io/hexocat/). The last step is to create the slash command app on Slack with the given URL and try searching some GitHub repositories! You can find more information on creating a new slash command in the Slack [documentation](https://api.slack.com/slash-commands).
 
 ## Wrapping up
+
 In this blog post we have integrated Rocket for serving requests from Slack, as well as the GitHub service from [part one]({% post_url 2017-07-27-hexocat-bot-part-1 %}). You can find the source code of the hexocat bot on [GitHub](https://github.com/ArazAbishov/hexocat-bot/tree/post-part-2).
