@@ -10,11 +10,11 @@ date: 2021-06-06 12:00:00 +0000
 
 ![Android Studio on iPad](/content/images/android-studio-on-ipad.jpg)
 
-After Apple has announced M1 for iPads people started speculating that we will see "pro" apps like Xcode announced for iPadOS during the upcoming WWDC. It got me thinking about the experience of building mobile apps on tablets, especially the workflow with emulators/simulators.
+After Apple has announced M1 for iPads, people started speculating that we will see "pro" apps like Xcode announced for iPadOS during the upcoming WWDC. It got me thinking about the experience of building mobile apps on tablets, especially the workflow with emulators/simulators.
 
 A couple of months ago, I came across the [blog post](https://medium.com/swlh/how-to-run-android-studio-on-any-device-with-jetbrains-projector-3d9d23a8c179) of Joaquim Verges that showed how [Projector](https://blog.jetbrains.com/blog/2021/03/11/projector-is-out/) could be used to enable remote IDE experience. Essentially, Projector allows running IntelliJ-based IDEs, such as Android Studio, on a remote machine with a lot of computing power. Since Projector draws UI in a browser, your favorite IDE becomes available anywhere, including iPads.
 
-However, the mobile dev loop is incomplete without running the app in an emulator or a physical device. To my knowledge, there is no way of running an ADB server on iOS, killing off chances of connecting an Android phone directly to an iPad. Hosting emulators on iOS is also not possible without jailbreaking the device or sideloading applications. Instead of hosting it, we can run it alongside Android Studio on a VM and connect to it using a VNC client.
+However, the mobile dev loop is incomplete without running the app in an emulator or a physical device. To my knowledge, there is no way of running an ADB server on iOS, killing off chances for connecting an Android phone directly to an iPad. Hosting emulators on iOS is also not possible without jailbreaking the device or sideloading applications. Instead of hosting it, we can run it alongside Android Studio on a VM and connect to it using a VNC client.
 
 The first part of this blog post demonstrates the result, while the second one dives deeper into technical details.
 
@@ -24,7 +24,7 @@ The first part of this blog post demonstrates the result, while the second one d
 
 > The setup used in this demo includes an iPad Air (2020) paired with a magic keyboard and trackpad (see the picture above). This combination works pretty well, especially with the cursor support in iPadOS.
 
-Below you can see Android Studio (AS) rendered by Safari, along with the Android emulator connected through VNC. Since both Android Studio and emulator run on a single VM, AS automatically discovers emulator as a target device.
+Below you can see Android Studio (AS) rendered in Safari and the Android emulator connected through VNC. Since both Android Studio and emulator run on a single VM, AS automatically discovers the emulator as a target device.
 
 <!-- Android emulator side by side -->
 <div style="padding:56.25% 0 0 0;position:relative;">
@@ -72,7 +72,7 @@ The second part of the blog post describes the steps necessary to configure the 
 
 ### Virtual machine
 
-You will need a VM with support for nested virtualization or KVM. Otherwise, android emulators will be unusable. I have picked Ubuntu Server 18.04 LTS as OS because I am familiar with it the most, so some steps will have to be adapted to the distro of your choice. Pick a VM that is geographically closest to you, as it will likely have lower latency. My configuration had four virtual cores and 16 GBs of RAM.
+You will need a VM with support for nested virtualization or KVM. Otherwise, android emulators will be unusable. I have picked Ubuntu Server 18.04 LTS, so some steps will have to be adapted to the distro of your choice. Pick a VM that is geographically closest to you, as it will likely have lower latency. My configuration had four virtual cores and 16 GBs of RAM.
 
 Once the VM is up and running, you will need to set up your private/public SSH keys. Most cloud providers like AWS, Azure, and Google Cloud have tutorials on how to achieve that.
 
@@ -137,7 +137,7 @@ tar -xvf android-studio.tar.gz
 ```bash
 
 # you will be prompted to accept a license when
-# running for the first
+# running Projector for the first time
 projector config add --expert
 
   There are no installed Projector IDEs.
@@ -155,7 +155,7 @@ projector config add --expert
 
 ```
 
-If you want to enable encryption, you will need to edit the configuration by running `projector edit <config_name>`. For some reason, Projector does not prompt us to use a secure connection during the first step.
+If you want to enable encryption, you will need to edit the configuration by running `projector edit <config_name>`. For some reason, Projector does not prompt us to use a secure connection during the initial setup.
 
 5: Running Android Studio:
 
@@ -175,13 +175,13 @@ If you point the browser to `http://your_server_ip_addres:7070?token=your_passwo
 
 ### Android emulators
 
-1: Before installing emulators, make sure that to accept the SDK licenses
+1: Before installing emulators, make sure that to accept the SDK licenses:
 
 ```bash
 ~/Android/Sdk/tools/bin/sdkmanager --licenses
 ```
 
-2: We need to put the Android SDK tools on path:
+2: We need to put the Android SDK tools on the path:
 
 ```bash
 nano ~/.bashrc
@@ -194,7 +194,7 @@ export PATH=$ANDROID_SDK/emulator:$ANDROID_SDK/tools:$ANDROID_SDK/tools/bin:$AND
 source ~/.bashrc
 ```
 
-Once SDK tools are on the path, run `avdmanager list avd` to print a list of available emulators. At the time of writing, I had one device available out of the box: `Pixel_3a_API_30_x86`. Take a note of the emulator name, we will need it later.
+Once SDK tools are on the path, run `avdmanager list avd` to print a list of available emulators. At the time of writing, `Pixel_3a_API_30_x86` was set up by Android Studio by default. Note the emulator's name, as we will need it later.
 
 3: Install KVM dependencies to enable nested virtualization:
 
@@ -208,7 +208,7 @@ sudo apt-get install qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils
 sudo apt-get install xvfb x11vnc
 ```
 
-To ensure that the graphics pipeline and the VNC server are setup correctly, we will use the glxgears demo application.
+To ensure that the graphics pipeline and the VNC server are set up correctly, we will use the glxgears demo application.
 
 ```bash
 # glxgears is a part of this package
@@ -252,7 +252,7 @@ DISPLAY=:1 emulator -avd Pixel_3a_API_30_x86 \
   -qemu -enable-kvm
 ```
 
-If you encounter an error saying that the current user does not have permission to use KVM, run the following command: `sudo gpasswd -a $USER kvm`. You will need to restart the SSH session for the changes to become active. Re-run the emulator command above and now you should see the emulator logs:
+If you encounter an error saying that the current user does not have permission to use KVM, run the following command: `sudo gpasswd -a $USER kvm`. You will need to restart the SSH session for the changes to become active. Re-run the emulator command above, and now you should see the emulator logs:
 
 ```bash
 ...
@@ -282,4 +282,11 @@ At this point, you should have both Android Studio and emulators running. Congra
 
 ----
 
-This experiment allowed me to get a taste of what mobile development could look like in the future. Different input methods, such as cursor and keyboard for navigation in IDE, and the touch controls for emulators felt surprisingly natural. I am excited to see native support for developer tools on iPadOS. Let's hope that Apple will finally make this leap.
+Overall, it was a lot of fun to try out mobile development on the iPad. Different input methods, such as cursor and keyboard for navigation in IDE, and the touch controls for emulators felt surprisingly good. Let's hope that Apple will bring developer tools to iPadOS one day.
+
+## Resources
+
+----
+
+- [JetBrains Projector on GitHub](https://github.com/JetBrains/projector-installer)
+- [JetBrains Projector with Android Studio by Joaquim](https://github.com/joaquim-verges/ProjectorAndroidStudio)
